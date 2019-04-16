@@ -62,7 +62,18 @@ private:
     void abs_dec();
     void abs_add(std::vector<unsigned int> const& arg);
     void abs_sub(std::vector<unsigned int> const& arg);
+    void shifted_abs_add(std::vector<unsigned int> const& arg, int offset);
+    void shifted_abs_sub(std::vector<unsigned int> const& arg, int offset);
     void abs_mul(unsigned int arg);
+
+    int compare(big_integer const& arg) const;
+    int abs_compare(big_integer const& arg) const;
+    int shifted_abs_compare(big_integer const& arg, int offset) const;
+
+    big_integer put_sign() const;
+    big_integer drop_sign();
+
+    static big_integer valueOf(unsigned int e);
 
     bool sign;
     std::vector<unsigned int> v;
