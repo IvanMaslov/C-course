@@ -62,9 +62,11 @@ private:
     void abs_dec();
     void abs_add(std::vector<unsigned int> const& arg);
     void abs_sub(std::vector<unsigned int> const& arg);
+    void abs_mul(unsigned int arg);
     void shifted_abs_add(std::vector<unsigned int> const& arg, int offset);
     void shifted_abs_sub(std::vector<unsigned int> const& arg, int offset);
-    void abs_mul(unsigned int arg);
+    void shifted_abs_mul(unsigned int arg, int offset);
+    void reversed_abs_sub(std::vector<unsigned int> const& arg);
 
     int compare(big_integer const& arg) const;
     int abs_compare(big_integer const& arg) const;
@@ -75,8 +77,8 @@ private:
 
     static big_integer valueOf(unsigned int e);
 
-    bool sign;
     std::vector<unsigned int> v;
+    bool sign;
 };
 
 big_integer operator+(big_integer a, big_integer const& b);
@@ -102,5 +104,5 @@ bool operator>=(big_integer const& a, big_integer const& b);
 std::string to_string(big_integer const& a);
 std::ostream& operator<<(std::ostream& s, big_integer const& a);
 
-#endif //BIGINTEGER_BIG_INTEGER_H
 
+#endif //BIGINTEGER_BIG_INTEGER_H
