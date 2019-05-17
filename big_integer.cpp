@@ -108,7 +108,7 @@ big_integer &big_integer::operator/=(big_integer const &rhs) {
         ans.v[m] = 0;
     }
     for (int j = m - 1; j >= 0; --j) {
-        if(A.v.size() <= j + n){
+        if(static_cast<int>(A.v.size()) <= j + n){
             ans.v[j] = static_cast<unsigned int>(0);
             continue;
         }
@@ -238,17 +238,19 @@ big_integer big_integer::operator++(int) {
 
 
 big_integer &big_integer::operator<<=(int rhs) {
-    std::vector<unsigned int> new_v;
+    vector_opt<unsigned int> new_v;
     new_v.assign(rhs / 32, 0);
     unsigned long long s = 0;
-    for (auto i : v) {
+    //for (auto i : v) {
+    for(size_t j = 0; j < v.size(); ++j){
+        unsigned int i = v[j];
         s += static_cast<unsigned long long>(i) << (rhs & 31);
         new_v.push_back(static_cast<unsigned int>(s & 0xffffffff));
         s >>= 32;
     }
     if (s)
         new_v.push_back(static_cast<unsigned int>(s & 0xffffffff));
-    swap(new_v, v);
+    std::swap(new_v, v);
     clear_leading_zeroes();
     return *this;
 }
@@ -274,7 +276,7 @@ big_integer &big_integer::operator>>=(int rhs) {
     return *this;
 }
 
-big_integer::big_integer(bool sign, std::vector<unsigned int> const &v) : v(v), sign(sign) { ; }
+big_integer::big_integer(bool sign, vector_opt<unsigned int> const &v) : v(v), sign(sign) { ; }
 
 void big_integer::clear_leading_zeroes() {
     while (!v.empty() && !v.back()) v.pop_back();
@@ -308,16 +310,16 @@ void big_integer::abs_dec() {
     clear_leading_zeroes();
 }
 
-void big_integer::abs_add(std::vector<unsigned int> const &arg) {
+void big_integer::abs_add(vector_opt<unsigned int> const &arg) {
     shifted_abs_add(arg, 0);
 }
 
-void big_integer::abs_sub(std::vector<unsigned int> const &arg) {
+void big_integer::abs_sub(vector_opt<unsigned int> const &arg) {
     shifted_abs_sub(arg, 0);
 }
 
-void big_integer::shifted_abs_add(std::vector<unsigned int> const &arg, int offset) {
-    if (v.size() < offset + arg.size())
+void big_integer::shifted_abs_add(vector_opt<unsigned int> const &arg, int offset) {
+    if (v.size() < static_cast<size_t>(offset) + arg.size())
         v.resize(offset + arg.size(), 0);
     unsigned long long cl = 0;
     for (size_t t = static_cast<size_t>(offset); t != v.size(); ++t) {
@@ -332,7 +334,7 @@ void big_integer::shifted_abs_add(std::vector<unsigned int> const &arg, int offs
     clear_leading_zeroes();
 }
 
-void big_integer::shifted_abs_sub(std::vector<unsigned int> const &arg, int offset) {
+void big_integer::shifted_abs_sub(vector_opt<unsigned int> const &arg, int offset) {
     if (v.size() < offset + arg.size())
         v.resize(offset + arg.size(), 0);
     unsigned long long cl = 0;
@@ -357,8 +359,10 @@ big_integer big_integer::put_sign() const {
         ans.v.push_back(0);
     } else {
         ans.sign = false;
-        for (auto &i : ans.v)
-            i = ~i;
+        for (size_t i = 0; i < ans.v.size(); ++i)
+            ans.v[i] = ~ans.v[i];
+        //for (auto &i : ans.v)
+        //    i = ~i;
         ans.abs_inc();
         ans.v.push_back(0xffffffff);
     }
@@ -368,8 +372,10 @@ big_integer big_integer::put_sign() const {
 big_integer big_integer::drop_sign() {
     if (v.back() & (1 << 31)) {
         sign = true;
-        for (auto &i : v)
-            i = ~i;
+        for (size_t i = 0; i < v.size(); ++i)
+            v[i] = ~v[i];
+        //for (auto &i : v)
+        //    i = ~i;
         abs_inc();
     }
     clear_leading_zeroes();
@@ -500,7 +506,7 @@ void big_integer::shifted_abs_mul(unsigned int arg, int offset) {
     if (t) v.push_back(static_cast<unsigned int>(t));
 }
 
-void big_integer::reversed_abs_sub(std::vector<unsigned int> const &arg) {
+void big_integer::reversed_abs_sub(vector_opt<unsigned int> const &arg) {
     if(v.size() < arg.size())
         v.resize(arg.size(), 0);
     unsigned long long cl = 0;

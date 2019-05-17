@@ -6,8 +6,10 @@
 #define BIGINTEGER_BIG_INTEGER_H
 
 #include <string>
-#include <vector>
 #include <algorithm>
+
+
+#include "vector_opt.h"
 
 struct big_integer
 {
@@ -55,18 +57,18 @@ struct big_integer
     static const big_integer ONE;
     static const big_integer ZERO;
 private:
-    big_integer(bool sign, std::vector<unsigned int> const& v);
+    big_integer(bool sign, vector_opt<unsigned int> const& v);
 
     void clear_leading_zeroes();
     void abs_inc();
     void abs_dec();
-    void abs_add(std::vector<unsigned int> const& arg);
-    void abs_sub(std::vector<unsigned int> const& arg);
+    void abs_add(vector_opt<unsigned int> const& arg);
+    void abs_sub(vector_opt<unsigned int> const& arg);
     void abs_mul(unsigned int arg);
-    void shifted_abs_add(std::vector<unsigned int> const& arg, int offset);
-    void shifted_abs_sub(std::vector<unsigned int> const& arg, int offset);
+    void shifted_abs_add(vector_opt<unsigned int> const& arg, int offset);
+    void shifted_abs_sub(vector_opt<unsigned int> const& arg, int offset);
     void shifted_abs_mul(unsigned int arg, int offset);
-    void reversed_abs_sub(std::vector<unsigned int> const& arg);
+    void reversed_abs_sub(vector_opt<unsigned int> const& arg);
 
     int compare(big_integer const& arg) const;
     int abs_compare(big_integer const& arg) const;
@@ -77,7 +79,7 @@ private:
 
     static big_integer valueOf(unsigned int e);
 
-    std::vector<unsigned int> v;
+    vector_opt<unsigned int> v;
     bool sign;
 };
 
